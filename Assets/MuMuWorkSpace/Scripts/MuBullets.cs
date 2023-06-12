@@ -19,6 +19,7 @@ public class MuBullets : MonoBehaviour
 
     private void OnCollisionEnter(Collision other) 
     {
-        MuGameManager.Targets.Remove(this.gameObject);    
+        Debug.Log(other.gameObject.name);
+        other.gameObject.GetComponent<MuTargets>().Hit();
     }
 }

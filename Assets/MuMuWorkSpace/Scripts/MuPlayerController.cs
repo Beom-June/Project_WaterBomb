@@ -12,13 +12,14 @@ public class MuPlayerController : MonoBehaviour
     [SerializeField] private float _rotSpeed = 2f;
     [SerializeField] private float _zoomTime = 0.5f;
     [SerializeField] private int _zoomSize = 35;
-    private bool _isZomming = false;
     [SerializeField] private GameObject[] _zoomDisGobs = null;
     [SerializeField] private GameObject[] _zoomEnaGobs = null;
+    private bool _isZomming = false;
 
-    [Header("Shoot")]
+    [Header("Hit")]
     [SerializeField] private LayerMask _hitLayers = 1;
     [SerializeField] private GameObject _hitParticleGob = null;
+
     [Header("Bullet")]
     [SerializeField] private GameObject _bullet = null;
     [SerializeField] private Transform _bulletStartTrs = null;
@@ -29,6 +30,9 @@ public class MuPlayerController : MonoBehaviour
     [SerializeField] private Vector3 _endOffSet = Vector3.zero;
 
     [SerializeField] private float _endTime = 2.0f;
+    [SerializeField] private float _endRotTime = 1.2f;
+    [SerializeField] private float _waitTime = 0.3f;
+
     private bool _isEnding = false; // 엔딩 연출중인지
     private void Awake() 
     {
@@ -72,7 +76,7 @@ public class MuPlayerController : MonoBehaviour
                             {
                                 _endTrs.position = hit.point + _endOffSet;
                                 GameObject bullet = Instantiate(_bullet, _bulletStartTrs.position, Quaternion.identity);
-                                StartCoroutine(bullet.GetComponent<MuBullets>().Shot(hit.point, _endTime));
+                                StartCoroutine(bullet.GetComponent<MuBullets>().Shot(hit.point, _endTime + _waitTime));
                                 MuGameManager.GameState = MuGameState.End;
                             }
                         }
@@ -144,18 +148,30 @@ public class MuPlayerController : MonoBehaviour
     private IEnumerator Ending()
     {
         _isEnding = true;
-
-        float curTIme = 0;
         transform.position = _endStartTrs.position;
         transform.rotation = _endStartTrs.rotation;
+        yield return new WaitForSeconds(_waitTime);
+        StartCoroutine(EndingRot());
+        float curTIme = 0;
         while (curTIme < _endTime)
         {
             curTIme += Time.deltaTime;
             transform.position = Vector3.Lerp(_endStartTrs.position, _endTrs.position, curTIme/_endTime);
-            transform.rotation = Quaternion.Slerp(_endStartTrs.rotation, _endTrs.rotation, curTIme/_endTime);
             yield return null;
         }
         MuGameManager.GameState = MuGameState.EndUI;
+        yield break;
+    }
+    private IEnumerator EndingRot()
+    {
+        yield return new WaitForSeconds(_endTime - _endRotTime);
+        float curTIme = 0;
+        while (curTIme < _endRotTime)
+        {
+            curTIme += Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(_endStartTrs.rotation, _endTrs.rotation, curTIme / _endTime);
+            yield return null;
+        }
         yield break;
     }
 

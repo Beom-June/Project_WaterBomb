@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/GameData/Scenes/Scene_GenJi.unity
+    guid: 1d9dba839947747f49b7437991025209
+  - enabled: 1
+    path: Assets/GameData/Scenes/Scene_Room.unity
+    guid: dedc595e827544dea88e372d60dec521
   m_configObjects: {}

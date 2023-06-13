@@ -4137,7 +4137,7 @@ MonoBehaviour:
   _imageFill: {fileID: 1680469479}
   _totalFill: 100
   _currentFill: 0
-  _fillSpeed: 20
+  _fillSpeed: 30
 --- !u!1 &814953006
 GameObject:
   m_ObjectHideFlags: 0

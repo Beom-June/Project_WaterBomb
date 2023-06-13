@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _imageFill;                                  //  채우는 이미지 (노란색)
     [SerializeField] private float _totalFill = 100.0f;
     [SerializeField] private float _currentFill;                                //  현재 채워진 양
-    [SerializeField] private float _fillSpeed = 20.0f;                                   //  채워지는 속도
+    [SerializeField] private float _fillSpeed = 30.0f;                                   //  채워지는 속도
     private bool isEnded = true;                                                //  채우는 것이 끝났는지 확인하는 bool 값
 
     void Update()
@@ -37,9 +37,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-     void Start() 
-     {
-    //   NextScene();  
+    void Start()
+    {
+        //   NextScene();  
     }
 
     #region  Reward Fill 관련 함수
@@ -60,13 +60,21 @@ public class UIManager : MonoBehaviour
     {
         Set_FillAmount(_totalFill);
         isEnded = true;
-        _textPercent.gameObject.SetActive(false);
+        // _textPercent.gameObject.SetActive(false);
     }
 
-    void Trigger_Fill()
+    // 호출시 차오르기 시작함
+    public void Trigger_Fill()
     {
-        if (!isEnded) return;
-        Reset_FillTime();
+        if (!isEnded)
+        {
+            return;
+        }
+        else
+        {
+            Debug.Log("Fill Start");
+            Reset_FillTime();
+        }
     }
 
     void Reset_FillTime()
@@ -83,13 +91,6 @@ public class UIManager : MonoBehaviour
         _textPercent.text = string.Format(" {0} %", value.ToString("0"));
     }
 
-    public void StartFillAnimation()
-    {
-        _imageFill.type = Image.Type.Filled;
-        _imageFill.fillMethod = Image.FillMethod.Vertical;
-        _imageFill.fillOrigin = 1;
-
-    }
     #endregion
 
     #region Scene 이동 관련 함수

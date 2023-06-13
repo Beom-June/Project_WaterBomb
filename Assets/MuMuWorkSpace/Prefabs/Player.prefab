@@ -43,8 +43,8 @@ Camera:
   m_GameObject: {fileID: 1221346922346983134}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.3964934, g: 0.5365109, b: 0.8490566, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -105,18 +105,27 @@ MonoBehaviour:
   _zoomDisGobs:
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   _zoomEnaGobs:
   - {fileID: 0}
+  _reboundTime: 0.15
   _hitLayers:
     serializedVersion: 2
     m_Bits: 2147483647
-  _hitParticleGob: {fileID: 6491664821745858055, guid: d7b3d20f51a57460b9ab0af2e20899b9, type: 3}
+  _hitParticleGob: {fileID: 8608737738367246110, guid: 20a9d27448ebd4ffa8c71b60d8a2da61, type: 3}
   _bullet: {fileID: 2746474699568340808, guid: 3911224ffc123436d99238de6fb07ff3, type: 3}
   _bulletStartTrs: {fileID: 1221346924117094967}
   _endStartTrs: {fileID: 0}
   _endTrs: {fileID: 0}
-  _endOffSet: {x: -9, y: 1, z: -2}
+  _endOffSet: {x: -12, y: 1, z: -11}
+  _endDisGobs:
+  - {fileID: 0}
   _endTime: 2
+  _endRotTime: 1.9
+  _waitTime: 0.25
+  _endingUITime: 1.5
+  _endingUIZ: -6
+  _gunAni: {fileID: 0}
 --- !u!1 &1221346924117094968
 GameObject:
   m_ObjectHideFlags: 0

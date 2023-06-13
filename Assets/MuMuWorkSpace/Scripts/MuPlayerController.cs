@@ -14,6 +14,7 @@ public class MuPlayerController : MonoBehaviour
     [SerializeField] private int _zoomSize = 35;
     [SerializeField] private GameObject[] _zoomDisGobs = null;
     [SerializeField] private GameObject[] _zoomEnaGobs = null;
+    [SerializeField] private float _reboundTime = 0.15f;
     private bool _isZomming = false;
 
     [Header("Hit")]
@@ -23,17 +24,23 @@ public class MuPlayerController : MonoBehaviour
     [Header("Bullet")]
     [SerializeField] private GameObject _bullet = null;
     [SerializeField] private Transform _bulletStartTrs = null;
+    private bool _lastHit = false;
 
     [Header("End")]
     [SerializeField] private Transform _endStartTrs = null;
     [SerializeField] private Transform _endTrs = null;
     [SerializeField] private Vector3 _endOffSet = Vector3.zero;
+    [SerializeField] private GameObject[] _endDisGobs = null;
 
     [SerializeField] private float _endTime = 2.0f;
     [SerializeField] private float _endRotTime = 1.2f;
     [SerializeField] private float _waitTime = 0.3f;
-
+    [SerializeField] private float _endingUITime = 0.5f;
+    [SerializeField] private float _endingUIZ = -6;
     private bool _isEnding = false; // 엔딩 연출중인지
+
+    [Header("WaterGun")]
+    [SerializeField] private Animator _gunAni = null;
     private void Awake() 
     {
         _cam = GetComponent<Camera>();
@@ -64,38 +71,47 @@ public class MuPlayerController : MonoBehaviour
                 {
                     if (hit.collider != null)
                     {
-                        Instantiate(_hitParticleGob, hit.point, Quaternion.identity); //  파티클 삽입
 
-                        if (hit.collider.gameObject.layer == 10) // Target이 맞았을 경우
+                        if (hit.collider.gameObject.layer == 10) // 타겟이 맞았을 경우
                         {
                             if (MuGameManager.Targets.Count > 1)
                             {
-                                hit.collider.GetComponent<MuTargets>().Hit();
+                                hit.collider.GetComponent<MuTargets>().Hit(hit.point);
+                                Instantiate(_hitParticleGob, hit.point, Quaternion.identity);
                             }
-                            else
+                            else // 마지막 타겟이 맞았을 경우
                             {
+                                _lastHit = true;
                                 _endTrs.position = hit.point + _endOffSet;
                                 GameObject bullet = Instantiate(_bullet, _bulletStartTrs.position, Quaternion.identity);
-                                StartCoroutine(bullet.GetComponent<MuBullets>().Shot(hit.point, _endTime + _waitTime));
+                                //StartCoroutine(bullet.GetComponent<MuBullets>().Shot(hit.point, _endTime + _waitTime));
+                                bullet.GetComponent<MuBullets>().Shoot(hit.point, _endTime + _waitTime);
                                 MuGameManager.GameState = MuGameState.End;
                             }
+                        }
+                        else
+                        {
+                            Instantiate(_hitParticleGob, hit.point, Quaternion.identity);
                         }
 
                     }
                 }
-                transform.eulerAngles = _startRot;
                 if (_isZomming)
                 {
-                    StartCoroutine(ZoomOut());
+                    StartCoroutine(Rebound());
                 }
             }
         }
-        else
+        else if (MuGameManager.GameState == MuGameState.End)
         {
             if (!_isEnding)
                 StartCoroutine(Ending());
 
-            return;
+        }
+        else if (MuGameManager.GameState == MuGameState.EndUI)
+        {
+            if (_isEnding)
+                StartCoroutine(EndingUI());
         }
         
     }
@@ -122,19 +138,43 @@ public class MuPlayerController : MonoBehaviour
         }
         yield break;
     }
-    private IEnumerator ZoomOut()
+    private IEnumerator Rebound()
     {
         _isZomming = false;
-        float curTime = 0f;
+        if (!_lastHit)
+        {
+            float curTime = 0;
+            Vector3 rot = transform.eulerAngles;
+            while (curTime < _reboundTime)
+            {
+                curTime += Time.deltaTime;
+                transform.eulerAngles = Vector3.Lerp(rot, rot - new Vector3(2.5f, 0, 0), curTime / _reboundTime);
+                yield return null;
+            }
+            while (curTime > 0)
+            {
+                curTime -= Time.deltaTime;
+                transform.eulerAngles = Vector3.Lerp(rot - new Vector3(2.5f, 0, 0), rot, (_reboundTime - curTime) / _reboundTime);
+                yield return null;
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+        yield return StartCoroutine(ZoomOut());
+    }
 
-        for (int i=0; i<_zoomDisGobs.Length; i++)
+    private IEnumerator ZoomOut()
+    {
+        for (int i = 0; i < _zoomDisGobs.Length; i++)
         {
             _zoomDisGobs[i].SetActive(true);
         }
-        for (int i=0; i<_zoomEnaGobs.Length; i++)
+        for (int i = 0; i < _zoomEnaGobs.Length; i++)
         {
             _zoomEnaGobs[i].SetActive(false);
         }
+        transform.eulerAngles = _startRot;
+        _gunAni.SetTrigger("Reload");
+        float curTime = 0f;
 
         while (curTime < _zoomTime)
         {
@@ -142,12 +182,22 @@ public class MuPlayerController : MonoBehaviour
             _cam.fieldOfView = Mathf.Lerp(_zoomSize, 60, curTime/_zoomTime);
             yield return null;
         }
+        _gunAni.ResetTrigger("Reload");
         yield break;
     }
 
-    private IEnumerator Ending()
+    private IEnumerator Ending() // 엔딩 움직임
     {
         _isEnding = true;
+        for (int i=0; i<_zoomDisGobs.Length; i++)
+        {
+            _zoomDisGobs[i].SetActive(false);
+        }
+        for (int i=0; i<_endDisGobs.Length; i++)
+        {
+            _endDisGobs[i].SetActive(false);
+        }
+        
         transform.position = _endStartTrs.position;
         transform.rotation = _endStartTrs.rotation;
         yield return new WaitForSeconds(_waitTime);
@@ -162,7 +212,7 @@ public class MuPlayerController : MonoBehaviour
         MuGameManager.GameState = MuGameState.EndUI;
         yield break;
     }
-    private IEnumerator EndingRot()
+    private IEnumerator EndingRot() // 엔딩 회전값
     {
         yield return new WaitForSeconds(_endTime - _endRotTime);
         float curTIme = 0;
@@ -173,6 +223,24 @@ public class MuPlayerController : MonoBehaviour
             yield return null;
         }
         yield break;
+    }
+
+
+    private IEnumerator EndingUI()
+    {
+        _isEnding = false;
+        yield return new WaitForSeconds(0.6f);
+        float curTime = 0;
+        Vector3 pos = transform.position;
+        Quaternion rot = transform.rotation;
+
+        while (curTime < _endingUITime)
+        {
+            curTime += Time.deltaTime;
+            transform.position = Vector3.Lerp(pos, new Vector3(0, pos.y, pos.z + _endingUIZ), curTime / _endingUITime);
+            transform.rotation = Quaternion.Lerp(rot, Quaternion.identity, curTime / _endingUITime);
+            yield return null;
+        }
     }
 
 }

@@ -11,13 +11,12 @@ public class MuGameManager : MonoBehaviour
 {
     public static List<GameObject> Targets = new List<GameObject>();
     public static MuGameState GameState = MuGameState.Playing;
-    public static int PlayerGold = 0;
     private UIManager _uiManager = null;
     [SerializeField] private RawImage _endBackImg = null;
     [SerializeField] private GameObject _endCanvas = null;
     private bool _isEndChanging = false;
 
-
+    public static int PlayerGold = 0;
     [Header("Bonus Stage")]
     [SerializeField] private GameObject[] _bulletImgs = null;
     private void Awake() 

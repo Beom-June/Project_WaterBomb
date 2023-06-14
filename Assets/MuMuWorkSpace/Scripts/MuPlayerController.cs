@@ -114,6 +114,12 @@ public class MuPlayerController : MonoBehaviour
                                 Instantiate(_hitParticleGob, hit.point, Quaternion.identity);
                             }
                         }
+                        else if (hit.collider.gameObject.layer == 13)
+                        {
+                            hit.collider.GetComponent<MuPots>().Hit();
+                            Instantiate(_hitParticleGob, hit.point, Quaternion.identity);
+
+                        }
                         else // 타켓이 아닌경우 상관없이 이펙트 생성
                         {
                             Instantiate(_hitParticleGob, hit.point, Quaternion.identity);

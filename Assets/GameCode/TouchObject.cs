@@ -53,27 +53,25 @@ public class TouchObject : MonoBehaviour
             }
         }
 
-
-        if (!_isExit)
-        {
             _isRotating = true;
             _isExit = true;
-        }
-        else
-        {
-            _isRotating = false;
-            _isExit = false;
-        }
+        // if (!_isExit)
+        // {
+        //     _isRotating = true;
+        //     _isExit = true;
+        // }
+        // else
+        // {
+        //     _isRotating = false;
+        //     _isExit = false;
+        // }
     }
 
     //  마우스를 드래그하는 동안
     private void OnMouseDrag()
     {
         MoveObejcet();
-    }
-    void OnMouseExit()
-    {
-        _isRotating = false;
+
     }
 
     //  오브젝트 드래그 메소드

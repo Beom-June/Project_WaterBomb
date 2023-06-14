@@ -14,7 +14,7 @@ public class MuBullets : MonoBehaviour
         _shotCoroutine = Shot(pos,targetTime);
         StartCoroutine(_shotCoroutine);
     }
-    private IEnumerator Shot(Vector3 pos, float targetTime)
+    private IEnumerator Shot(Vector3 pos, float targetTime)// 물총 발사
     {
         float curTime = 0;
         Vector3 curPos = transform.position;
@@ -30,7 +30,7 @@ public class MuBullets : MonoBehaviour
     private void OnCollisionEnter(Collision other) // Target에만 충돌 Layer설정
     {
         StopCoroutine(_shotCoroutine);
-        other.gameObject.GetComponent<MuTargets>().Hit(other.contacts[0].point);
+        other.gameObject.GetComponent<MuTargetMain>().Hit(other.contacts[0].point);
         Instantiate(_hitParticleGob, transform.position, transform.rotation);
         Instantiate(_endFireworkGob, transform.position + _fireworkOffSet, Quaternion.identity);
         Instantiate(_endFireworkGob, transform.position + new Vector3(_fireworkOffSet.x, _fireworkOffSet.y, -_fireworkOffSet.z), Quaternion.identity);

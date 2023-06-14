@@ -110,6 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5293ea7b902647edacd9d1e5247e6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _orgMat: {fileID: 2100000, guid: a10f6c5ec0f0fff4da18c2c0eb0185dc, type: 2}
-  _crossImg: {fileID: 0}
   _hitParticleGob: {fileID: 7888857835762348946, guid: 84dab4a8cf751fc4181b5f09a6186c21, type: 3}
+  _hitMat: {fileID: 2100000, guid: a10f6c5ec0f0fff4da18c2c0eb0185dc, type: 2}
+  _crossImg: {fileID: 0}

@@ -2,10 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum MuControllerType
+{
+    Normal, Bonus
+}
+
 public class MuPlayerController : MonoBehaviour
 {
     private Camera _cam = null;
-    
+    [Header("Controller Type")]
+    [SerializeField] private MuControllerType _ctrlType = MuControllerType.Normal;
+
+    [Header("Main Objs")]
     [Header("Zoom")]
     [SerializeField] private Vector3 _maxRot = Vector3.zero;
     [SerializeField] private Vector3 _startRot = Vector3.zero;
@@ -16,11 +25,16 @@ public class MuPlayerController : MonoBehaviour
     [SerializeField] private GameObject[] _zoomEnaGobs = null;
     [SerializeField] private float _reboundTime = 0.15f;
     private bool _isZomming = false;
+    
+    [Header("WaterGun")]
+    [SerializeField] private Animator _gunAni = null;
 
     [Header("Hit")]
     [SerializeField] private LayerMask _hitLayers = 1;
     [SerializeField] private GameObject _hitParticleGob = null;
 
+
+    [Header("Normal")]
     [Header("Bullet")]
     [SerializeField] private GameObject _bullet = null;
     [SerializeField] private Transform _bulletStartTrs = null;
@@ -38,9 +52,15 @@ public class MuPlayerController : MonoBehaviour
     [SerializeField] private float _endingUITime = 0.5f;
     [SerializeField] private float _endingUIZ = -6;
     private bool _isEnding = false; // 엔딩 연출중인지
+    [SerializeField] private Vector3 _endingUiOffSet = Vector3.zero;
 
-    [Header("WaterGun")]
-    [SerializeField] private Animator _gunAni = null;
+    [Space(6)]
+    [Header("Bonus")]
+    [SerializeField] private int _bulletCount = 5;
+    [SerializeField] private GameObject[] _bulletImgs = new GameObject[5];
+    [SerializeField] private GameObject _bulletParent = null;
+
+
     private void Awake() 
     {
         _cam = GetComponent<Camera>();
@@ -66,36 +86,52 @@ public class MuPlayerController : MonoBehaviour
             }
             else if (Input.GetMouseButtonUp(0)) // 발사
             {
-
-                if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 1000, _hitLayers))
+                if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 100, _hitLayers))
                 {
                     if (hit.collider != null)
                     {
-
                         if (hit.collider.gameObject.layer == 10) // 타겟이 맞았을 경우
                         {
-                            if (MuGameManager.Targets.Count > 1)
+                            if (_ctrlType == MuControllerType.Normal)
                             {
-                                hit.collider.GetComponent<MuTargets>().Hit(hit.point);
+                                if (MuGameManager.Targets.Count > 1)
+                                {
+                                    hit.collider.GetComponent<MuTargetMain>().Hit(hit.point);
+                                    Instantiate(_hitParticleGob, hit.point, Quaternion.identity);
+                                }
+                                else if (_ctrlType == MuControllerType.Normal) // 마지막 타겟이 맞았을 경우
+                                {
+                                    _lastHit = true;
+                                    _endTrs.position = hit.point + _endOffSet;
+                                    GameObject bullet = Instantiate(_bullet, _bulletStartTrs.position, Quaternion.identity);
+                                    bullet.GetComponent<MuBullets>().Shoot(hit.point, _endTime + _waitTime);
+                                    MuGameManager.GameState = MuGameState.End;
+                                }
+                            }
+                            else
+                            {
+                                hit.collider.GetComponent<MuTargetMain>().Hit(hit.point);
                                 Instantiate(_hitParticleGob, hit.point, Quaternion.identity);
                             }
-                            else // 마지막 타겟이 맞았을 경우
-                            {
-                                _lastHit = true;
-                                _endTrs.position = hit.point + _endOffSet;
-                                GameObject bullet = Instantiate(_bullet, _bulletStartTrs.position, Quaternion.identity);
-                                //StartCoroutine(bullet.GetComponent<MuBullets>().Shot(hit.point, _endTime + _waitTime));
-                                bullet.GetComponent<MuBullets>().Shoot(hit.point, _endTime + _waitTime);
-                                MuGameManager.GameState = MuGameState.End;
-                            }
                         }
-                        else
+                        else // 타켓이 아닌경우 상관없이 이펙트 생성
                         {
                             Instantiate(_hitParticleGob, hit.point, Quaternion.identity);
                         }
 
                     }
+                    if (_ctrlType == MuControllerType.Bonus)
+                    {
+                        _bulletImgs[_bulletCount - 1].SetActive(false);
+                        _bulletCount -= 1;
+                        if (MuGameManager.Targets.Count <= 0 || _bulletCount <= 0)
+                        {
+                            _bulletParent.SetActive(false);
+                            MuGameManager.GameState = MuGameState.EndUI;
+                        }
+                    }
                 }
+
                 if (_isZomming)
                 {
                     StartCoroutine(Rebound());
@@ -113,14 +149,12 @@ public class MuPlayerController : MonoBehaviour
             if (_isEnding)
                 StartCoroutine(EndingUI());
         }
-        
     }
 
-    private IEnumerator ZoomIn()
+    private IEnumerator ZoomIn() // 줌인
     {
         _isZomming = true;
         float curTime = 0f;
-
         for (int i=0; i<_zoomDisGobs.Length; i++)
         {
             _zoomDisGobs[i].SetActive(false);
@@ -138,7 +172,7 @@ public class MuPlayerController : MonoBehaviour
         }
         yield break;
     }
-    private IEnumerator Rebound()
+    private IEnumerator Rebound() // 사격시 반동
     {
         _isZomming = false;
         if (!_lastHit)
@@ -161,8 +195,7 @@ public class MuPlayerController : MonoBehaviour
         }
         yield return StartCoroutine(ZoomOut());
     }
-
-    private IEnumerator ZoomOut()
+    private IEnumerator ZoomOut() // 줌아웃
     {
         for (int i = 0; i < _zoomDisGobs.Length; i++)
         {
@@ -186,7 +219,7 @@ public class MuPlayerController : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator Ending() // 엔딩 움직임
+    private IEnumerator Ending() // 엔딩 카메라 연출
     {
         _isEnding = true;
         for (int i=0; i<_zoomDisGobs.Length; i++)
@@ -212,7 +245,7 @@ public class MuPlayerController : MonoBehaviour
         MuGameManager.GameState = MuGameState.EndUI;
         yield break;
     }
-    private IEnumerator EndingRot() // 엔딩 회전값
+    private IEnumerator EndingRot() // 엔딩 카메라 연출 (회전)
     {
         yield return new WaitForSeconds(_endTime - _endRotTime);
         float curTIme = 0;
@@ -226,7 +259,7 @@ public class MuPlayerController : MonoBehaviour
     }
 
 
-    private IEnumerator EndingUI()
+    private IEnumerator EndingUI() // UI 표시 움직임
     {
         _isEnding = false;
         yield return new WaitForSeconds(0.6f);
@@ -237,7 +270,7 @@ public class MuPlayerController : MonoBehaviour
         while (curTime < _endingUITime)
         {
             curTime += Time.deltaTime;
-            transform.position = Vector3.Lerp(pos, new Vector3(0, pos.y, pos.z + _endingUIZ), curTime / _endingUITime);
+            transform.position = Vector3.Lerp(pos, new Vector3(0, pos.y, pos.z + _endingUIZ) + _endingUiOffSet, curTime / _endingUITime);
             transform.rotation = Quaternion.Lerp(rot, Quaternion.identity, curTime / _endingUITime);
             yield return null;
         }

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public enum BonusTargetType
 {
     Jumper, Runner
@@ -26,9 +26,10 @@ public class MuBonusTargets : MuTargetMain
     private int _runCount = 0;
     [SerializeField] private float _runSpeed = 10f;
     [SerializeField] private float _runWaitTime = 1.0f;
-
-
-
+    
+    [Header("Gold")]
+    [SerializeField] private float _hitGold = 30;
+    private UnityEngine.UI.Text _goldTxt = null;
     private void Awake() 
     {
         _col = GetComponent<BoxCollider>();
@@ -38,6 +39,11 @@ public class MuBonusTargets : MuTargetMain
     {
         if (_targetType == BonusTargetType.Runner)
             StartCoroutine(RunnerRun());    
+        
+        if (GameObject.FindGameObjectWithTag("GoldText") != null)
+        {
+            _goldTxt = GameObject.FindGameObjectWithTag("GoldText").GetComponent<UnityEngine.UI.Text>();
+        }
     }
     public override void Hit(Vector3 pos)
     {
@@ -59,6 +65,8 @@ public class MuBonusTargets : MuTargetMain
             _ms[i].material = _hitMat;
         }
         _rb.AddForce(dir * _pushPower, ForceMode.Impulse);
+        if (_goldTxt != null)
+            _goldTxt.text = (Convert.ToInt32(_goldTxt.text) + _hitGold).ToString();
     }
 
 

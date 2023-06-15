@@ -21,6 +21,7 @@ public class MuPlayerController : MonoBehaviour
     [SerializeField] private float _rotSpeed = 2f;
     [SerializeField] private float _zoomTime = 0.5f;
     [SerializeField] private int _zoomSize = 35;
+    [SerializeField] private float _zoomOutDelay = 0.3f;
     [SerializeField] private GameObject[] _zoomDisGobs = null;
     [SerializeField] private GameObject[] _zoomEnaGobs = null;
     [SerializeField] private float _reboundTime = 0.15f;
@@ -197,20 +198,24 @@ public class MuPlayerController : MonoBehaviour
                 transform.eulerAngles = Vector3.Lerp(rot - new Vector3(2.5f, 0, 0), rot, (_reboundTime - curTime) / _reboundTime);
                 yield return null;
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(_zoomOutDelay);
         }
         yield return StartCoroutine(ZoomOut());
     }
     private IEnumerator ZoomOut() // 줌아웃
     {
-        for (int i = 0; i < _zoomDisGobs.Length; i++)
+        if (MuGameManager.GameState != MuGameState.EndUI)
         {
-            _zoomDisGobs[i].SetActive(true);
+            for (int i = 0; i < _zoomDisGobs.Length; i++)
+            {
+                _zoomDisGobs[i].SetActive(true);
+            }
         }
-        for (int i = 0; i < _zoomEnaGobs.Length; i++)
-        {
-            _zoomEnaGobs[i].SetActive(false);
-        }
+            for (int i = 0; i < _zoomEnaGobs.Length; i++)
+            {
+                _zoomEnaGobs[i].SetActive(false);
+            }
+
         transform.eulerAngles = _startRot;
         _gunAni.SetTrigger("Reload");
         float curTime = 0f;
@@ -267,6 +272,7 @@ public class MuPlayerController : MonoBehaviour
 
     private IEnumerator EndingUI() // UI 표시 움직임
     {
+
         _isEnding = false;
         yield return new WaitForSeconds(0.6f);
         float curTime = 0;

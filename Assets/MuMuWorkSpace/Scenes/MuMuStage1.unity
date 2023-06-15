@@ -7666,7 +7666,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 150
+  m_Text: 300
 --- !u!222 &816152024
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13511,7 +13511,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: +30
+  m_Text: +150
 --- !u!222 &1541838763
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14741,14 +14741,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.16197933, g: 0.57606053, b: 0.9811321, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: e45f10ec076877540948f58a7d67096c, type: 3}
+  m_Texture: {fileID: 2800000, guid: 89c89d31cbb023d4a87840ff06fe110e, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0

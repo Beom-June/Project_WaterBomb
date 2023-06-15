@@ -1,15 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class MuPots : MonoBehaviour
 {
-    [SerializeField] GameObject _plantGob = null;
-    [SerializeField] GameObject _targetWtMnGob = null;
-
+    [SerializeField] private GameObject _plantGob = null;
+    [SerializeField] private GameObject _targetWtMnGob = null;
     private float _hitCount = 0;
-    [SerializeField] GameObject _hitParticleGob = null;
+    [SerializeField] private GameObject _hitParticleGob = null;
+    [Header("Imoticon")]
+    [SerializeField] private Image _imoImg = null;
 
+    [SerializeField] private Sprite _smileSpr = null;
+
+
+    private void Awake() 
+    {
+    }
 
     public void Hit()
     {
@@ -24,6 +31,8 @@ public class MuPots : MonoBehaviour
             Instantiate(_hitParticleGob, transform.position, Quaternion.identity);
             _plantGob.SetActive(false);
             _targetWtMnGob.transform.localPosition = Vector3.zero;
+            _imoImg.sprite = _smileSpr;
+            _imoImg.GetComponent<RectTransform>().sizeDelta = new Vector2(8,8);
         }
     }
 

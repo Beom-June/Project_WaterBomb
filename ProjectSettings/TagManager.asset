@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Target
   - GoldText
+  - WayPoint
   layers:
   - Default
   - TransparentFX

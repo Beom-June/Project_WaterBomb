@@ -4872,8 +4872,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 8
-      minScalar: 3
+      scalar: 12
+      minScalar: 6
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4970,8 +4970,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.24
-      minScalar: 0.05
+      scalar: 0.3
+      minScalar: 0.1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5292,8 +5292,8 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 8
-    angle: 36.95
+    type: 0
+    angle: 21.7
     length: 0.8
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 0
@@ -14129,8 +14129,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 8
-      minScalar: 4
+      scalar: 16
+      minScalar: 8
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -14227,8 +14227,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.6
-      minScalar: 0.4
+      scalar: 3
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -14549,8 +14549,8 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 4
-    angle: 45
+    type: 17
+    angle: 31.5
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1

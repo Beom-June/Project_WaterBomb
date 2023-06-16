@@ -13,6 +13,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button _getButton;                                  //  다음 스테이지로 넘어가는 버튼
     [SerializeField] private Button _noThanks;                                  //  다음 스테이지로 넘어가는 버튼
 
+    [Header("Bonus Arrow")]
+    [SerializeField] private Image _bonusArrow;                                //  화살표 ui
+    [SerializeField] private float _movementDistance = 100f;  // 이동 거리
+    [SerializeField] private float _movementSpeed = 2f;      // 이동 속도
+
+    private bool _isMovingRight = true;  // 현재 이동 방향
+
     [Header("Reward Item Fill")]
     [SerializeField] private Text _textPercent;                                 // 퍼센트  텍스트
     [SerializeField] private Image _imageFill;                                  //  채우는 이미지 (노란색)
@@ -40,6 +47,32 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         //   NextScene();  
+        StartCoroutine(MoveArrow());
+    }
+
+    private IEnumerator MoveArrow()
+    {
+        while (true)
+        {
+            // 현재 위치와 목표 위치 계산
+            float startX = _isMovingRight ? -_movementDistance : _movementDistance;
+            float targetX = _isMovingRight ? _movementDistance : -_movementDistance;
+
+            // 이동 애니메이션
+            float t = 0f;
+            while (t < 1f)
+            {
+                t += Time.deltaTime * _movementSpeed;
+                float newX = Mathf.Lerp(startX, targetX, t);
+                Vector3 newPosition = _bonusArrow.rectTransform.localPosition;
+                newPosition.x = newX;
+                _bonusArrow.rectTransform.localPosition = newPosition;
+                yield return null;
+            }
+
+            // 이동 방향 변경
+            _isMovingRight = !_isMovingRight;
+        }
     }
 
     #region  Reward Fill 관련 함수
@@ -90,6 +123,7 @@ public class UIManager : MonoBehaviour
         _imageFill.fillAmount = value / _totalFill;
         _textPercent.text = string.Format(" {0} %", value.ToString("0"));
     }
+
 
     #endregion
 

@@ -1322,6 +1322,9 @@ MonoBehaviour:
   _hitImage: {fileID: 0}
   _getButton: {fileID: 1658268581}
   _noThanks: {fileID: 526459216}
+  _bonusArrow: {fileID: 442217118}
+  _movementDistance: -200
+  _movementSpeed: 0.8
   _textPercent: {fileID: 15798509}
   _imageFill: {fileID: 887134040}
   _totalFill: 100
@@ -4003,14 +4006,14 @@ RectTransform:
   m_GameObject: {fileID: 442217116}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.2, z: 0.5}
+  m_LocalScale: {x: 0.8, y: 0.2, z: 0.5}
   m_Children: []
   m_Father: {fileID: 598414910}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 329, y: -29}
+  m_AnchoredPosition: {x: 450, y: -29}
   m_SizeDelta: {x: 70, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &442217118

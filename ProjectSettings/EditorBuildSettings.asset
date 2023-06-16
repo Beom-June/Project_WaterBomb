@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/GameData/Scenes/Scene_GenJi.unity
-    guid: 1d9dba839947747f49b7437991025209
+    path: Assets/GameData/Scenes/Scene_Title.unity
+    guid: 05dd172a4d9df4bbfbc4ff99c15bc028
   - enabled: 1
-    path: Assets/GameData/Scenes/Scene_Room.unity
-    guid: dedc595e827544dea88e372d60dec521
+    path: Assets/MuMuWorkSpace/Scenes/MuMuStage1.unity
+    guid: ddd6ab69f1bb749edac3d6b9fd306621
   m_configObjects: {}

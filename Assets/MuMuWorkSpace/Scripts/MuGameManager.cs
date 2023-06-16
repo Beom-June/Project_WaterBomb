@@ -21,6 +21,7 @@ public class MuGameManager : MonoBehaviour
     [SerializeField] private GameObject[] _bulletImgs = null;
     private void Awake() 
     {
+        Application.targetFrameRate = 60;
         GameState = MuGameState.Playing;    
     }
     private void Start() 

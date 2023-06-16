@@ -1326,7 +1326,7 @@ MonoBehaviour:
   _imageFill: {fileID: 887134040}
   _totalFill: 100
   _currentFill: 0
-  _fillSpeed: 20
+  _fillSpeed: 40
 --- !u!4 &190691180
 Transform:
   m_ObjectHideFlags: 0
@@ -19735,6 +19735,10 @@ PrefabInstance:
       propertyPath: _crossImg
       value: 
       objectReference: {fileID: 258419919}
+    - target: {fileID: 106586957270739976, guid: dc2450637104f484b840db92e3ceb8df, type: 3}
+      propertyPath: _outLineStartTime
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 4859697338832027047, guid: dc2450637104f484b840db92e3ceb8df, type: 3}
       propertyPath: m_RootOrder
       value: 1

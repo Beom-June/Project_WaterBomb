@@ -1939,6 +1939,10 @@ PrefabInstance:
       propertyPath: _crossImg
       value: 
       objectReference: {fileID: 549975185}
+    - target: {fileID: 4457320781856473291, guid: 001fa5c8e50d4428f99e8bcfb895aa24, type: 3}
+      propertyPath: _outLineStartTime
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 8042560626086625637, guid: 001fa5c8e50d4428f99e8bcfb895aa24, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -5307,7 +5311,7 @@ MonoBehaviour:
   _imageFill: {fileID: 1513264599}
   _totalFill: 100
   _currentFill: 0
-  _fillSpeed: 20
+  _fillSpeed: 40
 --- !u!1 &815159153
 GameObject:
   m_ObjectHideFlags: 0
